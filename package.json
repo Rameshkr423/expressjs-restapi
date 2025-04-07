@@ -1,0 +1,26 @@
+{
+  "name": "expressjs-restapi",
+  "version": "1.0.0",
+  "description": "curd rest api ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rameshkr423/expressjs-restapi.git"
+  },
+  "keywords": [
+    "rest",
+    "api"
+  ],
+  "author": "Ramesh KR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rameshkr423/expressjs-restapi/issues"
+  },
+  "homepage": "https://github.com/Rameshkr423/expressjs-restapi#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
