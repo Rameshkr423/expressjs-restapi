@@ -1,5 +1,5 @@
 const multer = require('multer');
-const { User } = require('../models/user'); // Import the Tea model
+const { User } = require('../models/user'); // Import the User model
 const path = require('path');
 
 const storage = multer.diskStorage({
@@ -45,9 +45,9 @@ const newUser = async (req, res) => {
     try {
 
         console.log(req.file); // Add this line to check file details
-        const existingTea = await User.findOne({ name: req.body.name });
+        const existingUser = await User.findOne({ name: req.body.name });
 
-        if (existingTea) {
+        if (existingUser) {
             return res.json({ message: "User already exists" });
         }
 
@@ -98,43 +98,43 @@ const newTea = async (req, res) => {
 
 // DELETE all tea
 //DELETE teas
-const deleteAllTea = (req, res) => {
-    Tea.deleteMany({})
+const deleteAllUser = (req, res) => {
+    User.deleteMany({})
         .then(() => res.json({ message: "Complete delete successful" }))
         .catch(err => res.status(500).json({ message: "Complete delete failed", error: err.message }));
 };
 
-// GET single tea
-const getOneTea = async (req, res) => {
+// GET single user
+const getOneUser = async (req, res) => {
     try {
-        const name = req.params.name; // Get the tea name
-        const tea = await Tea.findOne({ name: name });
+        const name = req.params.name; // Get the User name
+        const User = await User.findOne({ name: name });
 
-        if (!tea) {
-            return res.status(404).json({ message: "Tea doesn't exist." });
+        if (!User) {
+            return res.status(404).json({ message: "User doesn't exist." });
         }
 
         return res.json(tea);
     } catch (err) {
-        return res.status(500).json({ message: "Error fetching tea.", error: err.message });
+        return res.status(500).json({ message: "Error fetching user.", error: err.message });
     }
 };
 
-//POST 1 tea comment
+//POST 1 User comment
 const newComment = async (req, res) => {
     try {
-        const name = req.params.name; // Get the tea to add the comment
+        const name = req.params.name; // Get the User to add the comment
         const newComment = req.body.comment; // Get the comment
 
         if (!newComment) {
             return res.status(400).json({ message: "Comment cannot be empty." });
         }
 
-        // Find the tea object
-        const tea = await Tea.findOne({ name: name });
+        // Find the user object
+        const user = await User.findOne({ name: name });
 
-        if (!tea) {
-            return res.status(404).json({ message: "Tea doesn't exist." });
+        if (!user) {
+            return res.status(404).json({ message: "User doesn't exist." });
         }
 
         // Create a comment object to push
@@ -144,33 +144,33 @@ const newComment = async (req, res) => {
         };
 
         // Add comment to comments array
-        tea.comments.push(comment);
+        User.comments.push(comment);
 
         // Save changes to DB
-        await tea.save();
+        await User.save();
 
-        return res.json({ message: "Comment added successfully.", tea });
+        return res.json({ message: "Comment added successfully.", User });
 
     } catch (err) {
         return res.status(500).json({ message: "Error adding comment.", error: err.message });
     }
 };
 
-// DELETE one tea
-//DELETE 1 tea
-const deleteOneTea = async (req, res) => {
+// DELETE one user
+//DELETE 1 user
+const deleteOneUser = async (req, res) => {
     try {
-        const name = req.params.name; // Get the tea name
+        const name = req.params.name; // Get the user name
 
-        // Delete the tea document
-        const result = await Tea.deleteOne({ name: name });
+        // Delete the user document
+        const result = await User.deleteOne({ name: name });
 
-        // Check if the tea existed and was deleted
+        // Check if the user existed and was deleted
         if (result.deletedCount === 0) {
-            return res.status(404).json({ message: "Tea doesn't exist." });
+            return res.status(404).json({ message: "user doesn't exist." });
         }
 
-        return res.json({ message: "Tea deleted successfully." });
+        return res.json({ message: "User deleted successfully." });
 
     } catch (err) {
         return res.status(500).json({ message: "Something went wrong, please try again.", error: err.message });
@@ -180,12 +180,12 @@ const deleteOneTea = async (req, res) => {
 
 // Export all functions
 module.exports = {
-    getAllTea,
+    getAllUser,
     uploadImg,
     newTea,
-    deleteAllTea,
-    getOneTea,
+    deleteAllUser,
+    getOneUser,
     newComment,
-    deleteOneTea,
+    deleteOneUser,
     newUser
 };
