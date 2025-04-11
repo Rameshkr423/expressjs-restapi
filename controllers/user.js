@@ -1,4 +1,5 @@
 const multer = require('multer');
+const bcrypt = require('bcrypt');
 const { User } = require('../models/user'); // Import the User model
 const path = require('path');
 
@@ -30,7 +31,7 @@ const uploadImg = multer({
 // GET all User
 const getAllUser = async (req, res) => {
     try {
-        const users = await User.find({});
+        const users = await User.find({}).select('email name password');
         res.json(users);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -40,22 +41,27 @@ const getAllUser = async (req, res) => {
 
 
 
+
 // POST new user
 const newUser = async (req, res) => {
     try {
+        console.log(req.file); // Optional: log uploaded file
 
-        console.log(req.file); // Add this line to check file details
         const existingUser = await User.findOne({ name: req.body.name });
 
         if (existingUser) {
             return res.json({ message: "User already exists" });
         }
 
+        // Hash the password
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
         const newUser = new User({
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password
-         });
+            password: hashedPassword
+        });
 
         const savedUser = await newUser.save();
         res.json(savedUser);
@@ -63,7 +69,6 @@ const newUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-
 
 // POST new tea
 const newTea = async (req, res) => {
